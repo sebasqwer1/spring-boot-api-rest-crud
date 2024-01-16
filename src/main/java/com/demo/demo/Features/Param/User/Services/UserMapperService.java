@@ -19,7 +19,12 @@ public class UserMapperService {
     }
 
     public GetUserResponseAll GetUserResponseAllToDTO(UserModel userModel) {
-        return modelMapper.map(userModel, GetUserResponseAll.class);
+
+        GetUserResponseAll userResponse = modelMapper.map(userModel, GetUserResponseAll.class);
+
+        userResponse.setCiudadDescripcion(userModel.getCityId().getDescription());
+        userResponse.setPaisDescripcion(userModel.getCityId().getPaisId().getDescription());
+        return userResponse;
     }
     public GetUserResponseById GetUserResponseByIdToDTO(UserModel userModel) {
         return modelMapper.map(userModel, GetUserResponseById.class);

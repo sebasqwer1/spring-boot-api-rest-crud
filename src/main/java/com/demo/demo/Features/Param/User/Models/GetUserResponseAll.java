@@ -22,4 +22,7 @@ public class GetUserResponseAll {
     @JsonProperty("ciudad")
     private String ciudadDescripcion;
 
+    @JsonProperty("pais")
+    private String paisDescripcion;
+
 }

@@ -21,6 +21,7 @@ public class GetUserResponseById {
 
     @JsonProperty("correo")
     private String email;
+
     @JsonProperty("ciudad")
     private CityModel cityId;
 

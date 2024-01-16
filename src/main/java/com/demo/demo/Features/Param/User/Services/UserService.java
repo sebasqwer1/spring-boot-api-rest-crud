@@ -6,6 +6,8 @@ import com.demo.demo.Features.Param.User.Models.*;
 import com.demo.demo.Features.Param.User.Repositories.IUserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import jakarta.persistence.criteria.Predicate;
 
 @Service
@@ -21,14 +24,18 @@ public class UserService {
     IUserRepository userRepository;
     @Autowired
     private UserMapperService userMapperService;
+
     public ArrayList<GetUserResponseAll> getUsers(String nombre, String apellido){
+
 
         Specification<UserModel> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (nombre != null && !nombre.isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("firsName")), "%" + nombre.toLowerCase() + "%"));            }
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("firsName")), "%" + nombre.toLowerCase() + "%"));
+            }
             if (apellido != null && !apellido.isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), "%" + apellido.toLowerCase() + "%"));            }
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), "%" + apellido.toLowerCase() + "%"));
+            }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
@@ -44,8 +51,18 @@ public class UserService {
         return userDTOList;
     }
 
-    public SaveUserResponse saveUser(UserModel user){
-        UserModel savedUser = userRepository.save(user);
+    public SaveUserResponse saveUser(SaveUserRequest user){
+
+        UserModel userModel = new UserModel();
+        userModel.setFirsName(user.getFirsName());
+        userModel.setLastName(user.getLastName());
+        userModel.setEmail(user.getEmail());
+        CityModel cityModel = new CityModel();
+        cityModel.setId(user.getCiudad());
+        userModel.setCityId(cityModel);
+
+        UserModel savedUser = userRepository.save(userModel);
+
         return userMapperService.SaveUserResponseToDTO(savedUser);
     }
 
